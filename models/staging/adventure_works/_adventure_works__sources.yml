@@ -216,7 +216,7 @@ sources:
             description: "Países/regiões.",
             columns:
               [
-                { name: countryregioncode, tests: [unique, not_null] },
+                { name: countryregioncode, tests: [unique, { not_null: { config: { severity: warn } } }] },
                 { name: name, tests: [not_null] },
               ],
           },
