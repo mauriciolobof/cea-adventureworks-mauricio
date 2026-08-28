@@ -7,6 +7,7 @@
 -- total geral de vendas.
 
 select
+    concat(cast(sales_order_id as string), '-', cast(sales_reason_id as string)) as sales_order_reason_key,
     sales_order_id,
     sales_reason_id
 from {{ ref('stg_adventure_works__sales_order_header_sales_reason') }}
