@@ -54,12 +54,12 @@ models:
   ]}
 - { name: fct_sales, description: "Fato de vendas. Grão: 1 linha por item de pedido (sales_order_detail).", columns: [
     { name: sales_order_detail_id, description: "Chave primária / grão da fato.", tests: [unique, not_null] },
-    { name: date_key, description: "FK para dim_date (data do pedido).", tests: [not_null, { relationships: { to: "ref('dim_date')", field: date_day } }] },
-    { name: customer_id, description: "FK para dim_customer.", tests: [not_null, { relationships: { to: "ref('dim_customer')", field: customer_id } }] },
-    { name: product_id, description: "FK para dim_product.", tests: [not_null, { relationships: { to: "ref('dim_product')", field: product_id } }] },
-    { name: sales_person_id, description: "FK para dim_salesperson (pode ser nulo).", tests: [{ relationships: { to: "ref('dim_salesperson')", field: sales_person_id } }] },
-    { name: address_id, description: "FK para dim_geography (endereço de entrega).", tests: [{ relationships: { to: "ref('dim_geography')", field: address_id } }] },
-    { name: credit_card_id, description: "FK para dim_credit_card (pode ser nulo).", tests: [{ relationships: { to: "ref('dim_credit_card')", field: credit_card_id } }] },
+    { name: date_key, description: "FK para dim_date (data do pedido).", tests: [not_null, { relationships: { arguments: { to: "ref('dim_date')", field: date_day } } }] },
+    { name: customer_id, description: "FK para dim_customer.", tests: [not_null, { relationships: { arguments: { to: "ref('dim_customer')", field: customer_id } } }] },
+    { name: product_id, description: "FK para dim_product.", tests: [not_null, { relationships: { arguments: { to: "ref('dim_product')", field: product_id } } }] },
+    { name: sales_person_id, description: "FK para dim_salesperson (pode ser nulo).", tests: [{ relationships: { arguments: { to: "ref('dim_salesperson')", field: sales_person_id } } }] },
+    { name: address_id, description: "FK para dim_geography (endereço de entrega).", tests: [{ relationships: { arguments: { to: "ref('dim_geography')", field: address_id } } }] },
+    { name: credit_card_id, description: "FK para dim_credit_card (pode ser nulo).", tests: [{ relationships: { arguments: { to: "ref('dim_credit_card')", field: credit_card_id } } }] },
     { name: sales_order_id, description: "Dimensão degenerada: número do pedido (agrupa os itens de um mesmo pedido)." },
     { name: status, description: "Status do pedido." },
     { name: order_qty, description: "Métrica: quantidade comprada do item." },
@@ -71,5 +71,32 @@ models:
 - { name: fct_sales_reason_bridge, description: "Tabela ponte factless: relação N:N entre pedido e motivo de venda. Ver nota de atribuição múltipla no arquivo do modelo.", columns: [
     { name: sales_order_reason_key, description: "Chave primária da ponte (sales_order_id + sales_reason_id).", tests: [unique, not_null] },
     { name: sales_order_id, description: "FK para fct_sales.sales_order_id." },
-    { name: sales_reason_id, description: "FK para dim_sales_reason.", tests: [{ relationships: { to: "ref('dim_sales_reason')", field: sales_reason_id } }] }
+    { name: sales_reason_id, description: "FK para dim_sales_reason.", tests: [{ relationships: { arguments: { to: "ref('dim_sales_reason')", field: sales_reason_id } } }] }
+  ]}
+- { name: rpt_sales_summary, description: "Tabela larga para consumo do BI (totais/rankings/ticket médio). Grão: 1 linha por item de pedido — sem o join de motivo de venda, então não sofre duplicação para pedidos multi-motivo (ver nota em rpt_sales.sql).", columns: [
+    { name: sales_order_detail_id, description: "Chave primária / grão da tabela.", tests: [unique, not_null] },
+    { name: sales_order_id, description: "Dimensão degenerada: número do pedido." },
+    { name: status, description: "Status do pedido." },
+    { name: order_date, description: "Data do pedido." },
+    { name: order_year, description: "Ano do pedido." },
+    { name: order_month, description: "Mês do pedido (1-12)." },
+    { name: order_month_name, description: "Nome do mês por extenso." },
+    { name: customer_id, description: "FK para dim_customer.", tests: [{ relationships: { arguments: { to: "ref('dim_customer')", field: customer_id } } }] },
+    { name: customer_name, description: "Nome do cliente." },
+    { name: customer_type, description: "'Individual' ou 'Store'." },
+    { name: product_id, description: "FK para dim_product.", tests: [{ relationships: { arguments: { to: "ref('dim_product')", field: product_id } } }] },
+    { name: product_name, description: "Nome do produto." },
+    { name: product_category_name, description: "Categoria do produto." },
+    { name: product_subcategory_name, description: "Subcategoria do produto." },
+    { name: city, description: "Cidade de entrega." },
+    { name: state_province_name, description: "Estado/província de entrega." },
+    { name: country_region_name, description: "País de entrega." },
+    { name: sales_person_id, description: "FK para dim_salesperson (pode ser nulo)." },
+    { name: salesperson_name, description: "Nome do vendedor." },
+    { name: card_type, description: "Tipo/bandeira do cartão." },
+    { name: order_qty, description: "Métrica: quantidade comprada do item." },
+    { name: unit_price, description: "Preço unitário praticado." },
+    { name: unit_price_discount, description: "Percentual de desconto aplicado (0 a 1)." },
+    { name: gross_amount, description: "Métrica: valor bruto negociado." },
+    { name: net_amount, description: "Métrica: valor líquido negociado." }
   ]}

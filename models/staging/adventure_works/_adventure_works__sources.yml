@@ -26,8 +26,11 @@ sources:
                       {
                         relationships:
                           {
-                            to: "source('adventure_works', 'sales_customer')",
-                            field: customerid,
+                            arguments:
+                              {
+                                to: "source('adventure_works', 'sales_customer')",
+                                field: customerid,
+                              },
                           },
                       },
                     ],
@@ -59,8 +62,11 @@ sources:
                       {
                         relationships:
                           {
-                            to: "source('adventure_works', 'sales_salesorderheader')",
-                            field: salesorderid,
+                            arguments:
+                              {
+                                to: "source('adventure_works', 'sales_salesorderheader')",
+                                field: salesorderid,
+                              },
                           },
                       },
                     ],
@@ -74,8 +80,11 @@ sources:
                       {
                         relationships:
                           {
-                            to: "source('adventure_works', 'production_product')",
-                            field: productid,
+                            arguments:
+                              {
+                                to: "source('adventure_works', 'production_product')",
+                                field: productid,
+                              },
                           },
                       },
                     ],
@@ -98,8 +107,11 @@ sources:
                       {
                         relationships:
                           {
-                            to: "source('adventure_works', 'sales_salesorderheader')",
-                            field: salesorderid,
+                            arguments:
+                              {
+                                to: "source('adventure_works', 'sales_salesorderheader')",
+                                field: salesorderid,
+                              },
                           },
                       },
                     ],
@@ -112,8 +124,11 @@ sources:
                       {
                         relationships:
                           {
-                            to: "source('adventure_works', 'sales_salesreason')",
-                            field: salesreasonid,
+                            arguments:
+                              {
+                                to: "source('adventure_works', 'sales_salesreason')",
+                                field: salesreasonid,
+                              },
                           },
                       },
                     ],
@@ -180,8 +195,11 @@ sources:
                       {
                         relationships:
                           {
-                            to: "source('adventure_works', 'person_stateprovince')",
-                            field: stateprovinceid,
+                            arguments:
+                              {
+                                to: "source('adventure_works', 'person_stateprovince')",
+                                field: stateprovinceid,
+                              },
                           },
                       },
                     ],
@@ -203,8 +221,11 @@ sources:
                       {
                         relationships:
                           {
-                            to: "source('adventure_works', 'person_countryregion')",
-                            field: countryregioncode,
+                            arguments:
+                              {
+                                to: "source('adventure_works', 'person_countryregion')",
+                                field: countryregioncode,
+                              },
                           },
                       },
                     ],
@@ -250,8 +271,11 @@ sources:
                       {
                         relationships:
                           {
-                            to: "source('adventure_works', 'production_productcategory')",
-                            field: productcategoryid,
+                            arguments:
+                              {
+                                to: "source('adventure_works', 'production_productcategory')",
+                                field: productcategoryid,
+                              },
                           },
                       },
                     ],
