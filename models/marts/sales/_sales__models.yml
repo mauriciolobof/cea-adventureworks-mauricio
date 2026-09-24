@@ -1,0 +1,75 @@
+version: 2
+models:
+- { name: dim_date, description: "Dimensão de calendário, 1 linha por dia.", columns: [
+    { name: date_day, description: "Chave primária. Data do calendário.", tests: [unique, not_null] },
+    { name: year, description: "Ano." },
+    { name: quarter, description: "Trimestre do ano (1-4)." },
+    { name: month, description: "Mês do ano (1-12)." },
+    { name: month_name, description: "Nome do mês por extenso." },
+    { name: day_of_month, description: "Dia do mês." },
+    { name: day_of_week, description: "Dia da semana (1-7)." },
+    { name: day_name, description: "Nome do dia da semana por extenso." },
+    { name: week_of_year, description: "Semana do ano." }
+  ]}
+- { name: dim_product, description: "Dimensão de produto.", columns: [
+    { name: product_id, description: "Chave primária do produto.", tests: [unique, not_null] },
+    { name: product_name, description: "Nome do produto." },
+    { name: product_number, description: "Código/SKU do produto." },
+    { name: color, description: "Cor do produto." },
+    { name: list_price, description: "Preço de lista." },
+    { name: standard_cost, description: "Custo padrão." },
+    { name: product_subcategory_name, description: "Nome da subcategoria." },
+    { name: product_category_name, description: "Nome da categoria." }
+  ]}
+- { name: dim_geography, description: "Dimensão geográfica. Grão: 1 linha por endereço.", columns: [
+    { name: address_id, description: "Chave primária do endereço.", tests: [unique, not_null] },
+    { name: city, description: "Cidade." },
+    { name: state_province_name, description: "Estado/província." },
+    { name: country_region_name, description: "País." },
+    { name: country_region_code, description: "Código ISO do país (ver nota sobre a Namíbia no sources.yml)." }
+  ]}
+- { name: dim_sales_reason, description: "Dimensão de motivo de venda.", columns: [
+    { name: sales_reason_id, description: "Chave primária do motivo de venda.", tests: [unique, not_null] },
+    { name: sales_reason_name, description: "Nome do motivo de venda." },
+    { name: reason_type, description: "Tipo/categoria do motivo." }
+  ]}
+- { name: dim_credit_card, description: "Dimensão de cartão de crédito.", columns: [
+    { name: credit_card_id, description: "Chave primária do cartão.", tests: [unique, not_null] },
+    { name: card_type, description: "Tipo/bandeira do cartão." }
+  ]}
+- { name: dim_customer, description: "Dimensão de cliente (pessoa física ou loja).", columns: [
+    { name: customer_id, description: "Chave primária do cliente.", tests: [unique, not_null] },
+    { name: person_id, description: "FK para a pessoa (nulo quando o cliente é uma loja)." },
+    { name: store_id, description: "FK para a loja (nulo quando o cliente é pessoa física)." },
+    { name: customer_name, description: "Nome do cliente (nulo para clientes-loja, ver nota no vídeo/roadmap)." },
+    { name: customer_type, description: "'Individual' ou 'Store'." }
+  ]}
+- { name: dim_salesperson, description: "Dimensão de vendedor.", columns: [
+    { name: sales_person_id, description: "Chave primária do vendedor.", tests: [unique, not_null] },
+    { name: salesperson_name, description: "Nome do vendedor." },
+    { name: job_title, description: "Cargo." },
+    { name: sales_quota, description: "Meta de vendas." },
+    { name: sales_ytd, description: "Vendas acumuladas no ano." },
+    { name: sales_last_year, description: "Vendas do ano anterior." }
+  ]}
+- { name: fct_sales, description: "Fato de vendas. Grão: 1 linha por item de pedido (sales_order_detail).", columns: [
+    { name: sales_order_detail_id, description: "Chave primária / grão da fato.", tests: [unique, not_null] },
+    { name: date_key, description: "FK para dim_date (data do pedido).", tests: [not_null, { relationships: { to: "ref('dim_date')", field: date_day } }] },
+    { name: customer_id, description: "FK para dim_customer.", tests: [not_null, { relationships: { to: "ref('dim_customer')", field: customer_id } }] },
+    { name: product_id, description: "FK para dim_product.", tests: [not_null, { relationships: { to: "ref('dim_product')", field: product_id } }] },
+    { name: sales_person_id, description: "FK para dim_salesperson (pode ser nulo).", tests: [{ relationships: { to: "ref('dim_salesperson')", field: sales_person_id } }] },
+    { name: address_id, description: "FK para dim_geography (endereço de entrega).", tests: [{ relationships: { to: "ref('dim_geography')", field: address_id } }] },
+    { name: credit_card_id, description: "FK para dim_credit_card (pode ser nulo).", tests: [{ relationships: { to: "ref('dim_credit_card')", field: credit_card_id } }] },
+    { name: sales_order_id, description: "Dimensão degenerada: número do pedido (agrupa os itens de um mesmo pedido)." },
+    { name: status, description: "Status do pedido." },
+    { name: order_qty, description: "Métrica: quantidade comprada do item." },
+    { name: unit_price, description: "Preço unitário praticado." },
+    { name: unit_price_discount, description: "Percentual de desconto aplicado (0 a 1)." },
+    { name: gross_amount, description: "Métrica: valor bruto negociado = unit_price * order_qty." },
+    { name: net_amount, description: "Métrica: valor líquido negociado = unit_price * order_qty * (1 - desconto)." }
+  ]}
+- { name: fct_sales_reason_bridge, description: "Tabela ponte factless: relação N:N entre pedido e motivo de venda. Ver nota de atribuição múltipla no arquivo do modelo.", columns: [
+    { name: sales_order_reason_key, description: "Chave primária da ponte (sales_order_id + sales_reason_id).", tests: [unique, not_null] },
+    { name: sales_order_id, description: "FK para fct_sales.sales_order_id." },
+    { name: sales_reason_id, description: "FK para dim_sales_reason.", tests: [{ relationships: { to: "ref('dim_sales_reason')", field: sales_reason_id } }] }
+  ]}
