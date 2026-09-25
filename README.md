@@ -114,11 +114,11 @@ Dashboard interativo construído sobre `dbt_mauricio.rpt_sales`, respondendo:
 - (e) série temporal de pedidos/quantidade/valor por mês;
 - (f) produto com mais unidades vendidas sob o motivo "Promotion".
 
-🔗 Link do dashboard: **[https://datastudio.google.com/reporting/14629f1b-604b-4b13-9aa7-623c549b34ad]**
+🔗 Link do dashboard: **https://datastudio.google.com/reporting/14629f1b-604b-4b13-9aa7-623c549b34ad**
 
 ## Vídeo de apresentação
 
-🔗 Link do vídeo (≤10 min): **[a preencher]**
+🔗 Link do vídeo: **[https://youtu.be/O56uCBIcVfE](https://youtu.be/O56uCBIcVfE)**
 
 ## Stack
 
